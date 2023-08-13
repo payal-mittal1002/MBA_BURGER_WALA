@@ -1,39 +1,52 @@
 import React from 'react'
-import me from "../../assets/founder.webp"
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getAdminUsers } from '../../redux/actions/admin';
+import Loader from '../Layout/Loader';
 const Users = () => {
-    const arr=[1,2,3,4];
+    
+    const dispatch=useDispatch();
+    const {loading,users}=useSelector(state=>state.admin);
+    useEffect(() => {
+      dispatch(getAdminUsers());
+    }, [dispatch])
+    
   return (
     <section className='tableClass'>
-      <main>
+     {
+      loading===false ? <main>
         <table>
           <thead>
             <tr>
               <th>User ID</th>
-              <th>Name</th>
+              <th>Google ID</th>
               <th>Photo</th>
               <th>Role</th>
               <th>Since</th>
             </tr>
           </thead>
           <tbody>
-          {arr.map((i)=>(
-            <tr>
-              <td>#8676432</td>
-              <td>Payal</td>
+          {users&&users.map((i)=>(
+            
+            <tr key={i._id}>
+              <td>#{i._id}</td>
+              <td>{i.googleId}</td>
               <td>
-                <img src={me} alt='User'/>
+                <img src={i.photo} alt='User'/>
               </td>
-              <td>Admin</td>
-              <td>{"24-23-2222"}</td>
+              <td>{i.role}</td>
+              <td>{i.createdAt.split("T")[0]}</td>
               
             </tr>
           ))}
           
           </tbody>
         </table>
-      </main>
+      </main>:<Loader/>
+     }
     </section>
   )
 }
 
 export default Users
+

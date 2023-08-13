@@ -1,8 +1,12 @@
 import React from 'react'
 import {motion} from "framer-motion"
-import me from "../../assets/founder.webp"
+import me from ".././../assets/founder.webp"
 import {Link} from "react-router-dom"
 import {MdDashboard} from "react-icons/md"
+import {useDispatch, useSelector} from "react-redux"
+import {logout} from "../../redux/actions/user.js"
+import Loader from '../Layout/Loader'
+
 const Profile = () => {
     const options={
       initial:{
@@ -15,14 +19,25 @@ const Profile = () => {
 
       }
     }
+const dispatch=useDispatch();
+const {loading,user}=useSelector((state)=>state.auth);
+    const logoutHandler=()=>{
+      dispatch(logout());
+    }
+   
   return (
+   
     <section className='Profile'>
-        <main>
-          <motion.img src={me} alt='user' {...options}/>
-          <motion.h5 {...options} transition={{delay:0.3}}>Payal</motion.h5>
-          <motion.div {...options} transition={{delay:0.5}}>
-            <Link to="/Admin/DashBoard" style={{borderRadius:0,backgroundColor:"rgb(40,40,40"}}><MdDashboard/>DashBoard</Link>
-          </motion.div>
+        {
+          user!==undefined &&loading===false?<main>
+        
+          <motion.img src={user.photo} alt='user' {...options}/>
+          <motion.h5 {...options} transition={{delay:0.3}}>{user.name}</motion.h5>
+         {
+         user.role==="admin"&&(<motion.div {...options} transition={{delay:0.5}}>
+            <Link to="/admin/dashboard" style={{borderRadius:0,backgroundColor:"rgb(40,40,40"}}><MdDashboard/>DashBoard</Link>
+          </motion.div>)
+         }
           <motion.div 
           initial={{
             x:"-100vw",
@@ -33,7 +48,7 @@ const Profile = () => {
             opacity:1
           }}
           >
-            <Link to="/MyOrders">Orders</Link>
+            <Link to="/myorders">Orders</Link>
           </motion.div>
 
 
@@ -46,10 +61,11 @@ const Profile = () => {
             x:0,
             opacity:1
           }} 
-          transition={{delay:0.3}}>
+          transition={{delay:0.3}} onClick={logoutHandler}>
             LOGOUT
           </motion.button>
-        </main>
+        </main>:<Loader/>
+        }
     </section>
   )
 }

@@ -1,7 +1,11 @@
 import React from 'react'
 import {motion} from "framer-motion"
 import burger from "../../assets/burger2.png"
+import { Link, useNavigate } from 'react-router-dom'
+import ContactSaved from './ContactSaved'
+
 const Contact = () => {
+ 
   return (
    <section className='Contact'>
    <motion.form  
@@ -19,7 +23,8 @@ const Contact = () => {
     <input type="text" placeholder='Name'/>
     <input type="email" placeholder='Email'/>
     <textarea placeholder='Message...' rows={10} cols={30} />
-    <button type="submit">Send</button>
+    
+   <Link className='submit' to="/ContactSaved">Send</Link>
     </motion.form>
     <motion.div  className='formBorder'
     initial={{

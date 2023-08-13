@@ -1,16 +1,38 @@
 import React from 'react'
-
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getOrderDetails } from '../../redux/actions/order';
+import { useParams } from 'react-router-dom';
+import Loader from '../Layout/Loader';
 const OrderDetails = () => {
+    const params=useParams();
+    const {order,loading}=useSelector(state=>state.orders);
+    console.log(order)
+    const dispatch=useDispatch();
+    
+    useEffect(() => {
+       
+     dispatch(getOrderDetails(params.id));
+    }, [params.id,dispatch])
+    
   return (
+   
    <section className='OrderDetails'>
-    <main>
+    {
+        loading===false && order!==undefined? <main>
         <h1>Order Deatils</h1>
         <div>
             <h1>Shipping</h1>
         
             <p>
                 <b>Address</b>
-                {"hfknhjk"}
+                {
+                    `${order.shippingInfo.hNo}
+                    ${order.shippingInfo.city}
+                    ${order.shippingInfo.state}
+                    ${order.shippingInfo.country}
+                    ${order.shippingInfo.pinCode}`
+                }
             </p>
         </div>
 
@@ -20,11 +42,11 @@ const OrderDetails = () => {
             <h1>Contact</h1>
             <p>
                 <b>Name</b>
-                {"Payal"}
+                {order.user.name}
             </p>
             <p>
                 <b>Phone No.</b>
-                {6789765432}
+                {order.shippingInfo.phoneNo}
             </p>
         </div>
 
@@ -34,15 +56,15 @@ const OrderDetails = () => {
             <h1>Status</h1>
             <p>
                 <b>Order Status</b>
-                {"Processing"}
+                {order.orderStatus}
             </p>
             <p>
                 <b>Placed At</b>
-                {"23-02-342"}
+                {order.createdAt.split("T")[0]}
             </p>
             <p>
                 <b>Delivered At</b>
-                {"23-02-343"}
+                {order.deliveredAt?order.deliveredAt.split("T")[0]:"NA"}
             </p>
         </div>
 
@@ -51,15 +73,15 @@ const OrderDetails = () => {
             <h1>Payment</h1>
             <p>
                 <b>Payment Method</b>
-                {"Online"}
+                {order.paymentMethod}
             </p>
             <p>
                 <b>payment Reference</b>
-                #{687654}
+                {order.paymentMethod==="Online"?`#${order.paymentInfo}`:"NA"}
             </p>
             <p>
                 <b>Paid At</b>
-                {"23-02-343"}
+                {order.paymentMethod==="Online"?`${order.paidAT.split("T")[0]}`:"NA"}
             </p>
         </div>
 
@@ -68,19 +90,19 @@ const OrderDetails = () => {
             <h1>Amount</h1>
             <p>
                 <b>Total Items</b>
-                ₹{8765}
+                ₹{order.itemsPrice}
             </p>
             <p>
                 <b>Shipping Charges</b>
-                ₹{200}
+                ₹{order.shippingCharges}
             </p>
             <p>
                 <b>Tax Charges</b>
-                ₹{87}
+                ₹{order.taxPrice}
             </p>
             <p>
                 <b>Total Amount</b>
-                ₹{456}
+                ₹{order.totalAmount}
             </p>
             
         </div>
@@ -90,29 +112,30 @@ const OrderDetails = () => {
             <div>
             <h4>Cheese Burger</h4>
                   <div>
-                <span>{12}</span> × <span>{232}</span>
+                <span>{order.orderItems.cheeseBurger.quantity}</span> × <span>{order.orderItems.cheeseBurger.price}</span>
                 </div>
             </div>
 
             <div>
             <h4>Veg Cheese Burger</h4>
                   <div>
-                <span>{12}</span> × <span>{500}</span>
+                  <span>{order.orderItems.vegCheeseBurger.quantity}</span> × <span>{order.orderItems.vegCheeseBurger.price}</span>
                 </div>
             </div>
 
             <div>
             <h4>Cheese Burger with French Fries</h4>
                   <div>
-                <span>{12}</span> × <span>{1800}</span>
+                  <span>{order.orderItems.burgerWithFries.quantity}</span> × <span>{order.orderItems.burgerWithFries.price}</span>
                 </div>
             </div>
             <div>
                 <h4 style={{fontWeight:800}}>Sub Total</h4>
-                <div style={{fontWeight:800}}>₹{456}</div>
+                <div style={{fontWeight:800}}>₹{order.itemsPrice}</div>
             </div>
         </article>
-    </main>
+    </main>:<Loader/>
+    }
    </section>
   )
 }

@@ -1,11 +1,27 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {AiOutlineEye} from 'react-icons/ai'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyOrders } from '../../redux/actions/order'
+import Loader from '../Layout/Loader'
+import  toast  from 'react-hot-toast'
 const MyOrders = () => {
-  const arr=[1,2,3,4];
+ 
+  const dispatch=useDispatch();
+  const {orders,loading,error}=useSelector(state=>state.orders);
+  useEffect(() => {
+    if(error){
+      toast.error(error);
+      dispatch({type:"clearError"})
+    }
+    dispatch(getMyOrders());
+  }, [dispatch,error])
+  
   return (
     <section className='tableClass'>
-      <main>
+      {
+        loading===false?<main>
         <table>
           <thead>
             <tr>
@@ -18,20 +34,26 @@ const MyOrders = () => {
             </tr>
           </thead>
           <tbody>
-          {arr.map((i)=>(
-            <tr>
-              <td>#8676432</td>
-              <td>Processing</td>
-              <td>45</td>
-              <td>₹{67}</td>
-              <td>online</td>
-              <td><Link to={`/Order/${768654}`}><AiOutlineEye/></Link></td>
+          {orders&&orders.map((i)=>(
+            <tr key={i._id}>
+              <td>#{i._id}</td>
+              <td>{i.orderStatus}</td>
+              <td>{
+              i.orderItems.cheeseBurger.quantity
+              +i.orderItems.vegCheeseBurger.quantity
+              +i.orderItems.burgerWithFries.quantity
+              }</td>
+              <td>₹{i.totalAmount}</td>
+              <td>{i.paymentMethod}</td>
+              <td><Link to={`/order/${i._id}`}><AiOutlineEye/></Link></td>
             </tr>
           ))}
           
           </tbody>
         </table>
-      </main>
+      </main>:<Loader/>
+
+      }
     </section>
   )
 }

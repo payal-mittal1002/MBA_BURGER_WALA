@@ -6,7 +6,7 @@ const PaymentSuccess = () => {
         <main>
             <h1>Order Confirmed</h1>
             <p>Order Placed SuccessFully,You can check order status below</p>
-            <Link to='/MyOrders'>Check Status</Link>
+            <Link to='/myorders'>Check Status</Link>
         </main>
     </section>
   )

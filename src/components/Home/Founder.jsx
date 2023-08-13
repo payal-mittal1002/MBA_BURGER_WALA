@@ -15,7 +15,7 @@ const Founder = () => {
   return (
     <section className='Founder'>
         <motion.div {...options}>
-            <img src={me} alt="Founder" height={200} width={200}></img>
+            <img src={me} alt="Founder" height={200} width={200}/>
             
             <h3>Payal Mittal</h3>
             <p>Hey .everyone I am Payal Mittal <br/>Order food online for home delivery in Bangalore. Experience fastest food delivery service with no minimum order & GPS tracking.</p>
